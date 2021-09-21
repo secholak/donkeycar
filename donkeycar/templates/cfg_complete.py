@@ -54,6 +54,8 @@ SSD1306_RESOLUTION = 1 # 1 = 128x32; 2 = 128x64
 #PIGPIO_PWM uses Raspberrys internal PWM
 DRIVE_TRAIN_TYPE = "I2C_SERVO" # I2C_SERVO|DC_STEER_THROTTLE|DC_TWO_WHEEL|DC_TWO_WHEEL_L298N|SERVO_HBRIDGE_PWM|PIGPIO_PWM|MM1|MOCK
 
+AXLE_LENGTH = 0.3  # length of axle; distance between wheels in meters
+
 #STEERING
 STEERING_CHANNEL = 1            #channel on the 9685 pwm board 0-15
 STEERING_LEFT_PWM = 460         #pwm value for full left steering
@@ -92,6 +94,9 @@ HBRIDGE_PIN_RIGHT_BWD = 13
 
 #ODOMETRY
 HAVE_ODOM = False               # Do you have an odometer/encoder 
+HAVE_ODOM_2 = False             # Do you have a second odometer/encoder as in a differential drive robot.  
+                                # In this case, the 'first' encoder is the left wheel encoder and 
+                                # the second encoder is the right wheel encoder.
 ENCODER_TYPE = 'GPIO'           # What kind of encoder? GPIO|arduino.  
                                 # - 'GPIO' refers to direct connect of a single-channel encoder to an RPi/Jetson GPIO header pin.  
                                 #   Set ODOM_PIN to the gpio pin, based on board numbering.
@@ -126,6 +131,7 @@ MM_PER_TICK = 12.7625           # How much travel with a single encoder tick, in
 ODOM_SERIAL = '/dev/ttyACM0'    # serial port when ENCODER_TYPE is 'arduino'
 ODOM_SERIAL_BAUDRATE = 115200   # baud rate for serial port encoder
 ODOM_PIN = 13                   # if using ENCODER_TYPE=GPIO, which GPIO board mode pin to use as input
+ODOM_PIN_2 = 14                 # GPIO for second encoder in differential drivetrains
 ODOM_SMOOTHING = 1              # number of odometer readings to use when calculating velocity
 ODOM_DEBUG = False              # Write out values on vel and distance as it runs
 
