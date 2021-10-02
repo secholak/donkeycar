@@ -119,6 +119,12 @@ def drive(cfg, model_path=None, use_joystick=False, model_type=None,
 
         if tachometer:
             if cfg.HAVE_ODOM_2:
+                #
+                # A second odometer is configured; assume a 
+                # differential drivetrain.  Use Unicycle
+                # kinematics to synthesize a single distance
+                # and velocity from the two wheels.
+                #
                 from donkeycar.parts.kinematics import Unicycle
                 odometer1 = Odometer(
                     distance_per_revolution=cfg.ENCODER_PPR * cfg.MM_PER_TICK / 1000, 
@@ -135,10 +141,11 @@ def drive(cfg, model_path=None, use_joystick=False, model_type=None,
                 V.add(
                     Unicycle(cfg.AXLE_LENGTH, cfg.ODOM_DEBUG), 
                     inputs=['left/distance', 'right/distance', 'left/timestamp'], 
-                    outputs=['enc/distance', 'enc/speed', 'pose/x', 'pose/y', 'pose/angle', 'velocity/x', 'velocity/y', 'velocity/angle', 'enc/timestamp'],
+                    outputs=['enc/distance', 'enc/speed', 'pos/x', 'pos/y', 'pos/angle', 'vel/x', 'vel/y', 'vel/angle', 'enc/timestamp'],
                     threaded=False)
                 
             else:
+                # single odometer directly measures distance and velocity
                 odometer = Odometer(
                     distance_per_revolution=cfg.ENCODER_PPR * cfg.MM_PER_TICK / 1000, 
                     smoothing_count=cfg.ODOM_SMOOTHING, 
