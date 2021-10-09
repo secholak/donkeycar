@@ -100,9 +100,9 @@ class StopSignDetector(object):
         cv2.rectangle(img_arr, tuple(traffic_light_obj.bounding_box[0].astype(int)),
                         tuple(traffic_light_obj.bounding_box[1].astype(int)), (0, 255, 0), 2)
 
-    def run(self, img_arr, throttle, debug=False):
+    def run(self, img_arr, throttle, speed, debug=False):
         if img_arr is None:
-            return throttle, img_arr
+            return img_arr, throttle, speed
 
         # Detect traffic light object
         traffic_light_obj = self.detect_stop_sign(img_arr)
@@ -110,6 +110,8 @@ class StopSignDetector(object):
         if traffic_light_obj:
             if self.show_bounding_box:
                 self.draw_bounding_box(traffic_light_obj, img_arr)
-            return 0, img_arr
+            # set speed to none so we enforce zero throttle immediately
+            return img_arr, 0, None  
         else:
-            return throttle, img_arr
+            # pass through throttle and speed
+            return img_arr, throttle, speed
