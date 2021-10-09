@@ -7,6 +7,7 @@ are wrapped in a mixer class before being used in the drive loop.
 import time
 
 import donkeycar as dk
+from donkeycar.parts.kinematics import differential_steering
 
         
 class PCA9685:
@@ -542,29 +543,6 @@ class L298N_HBridge_DC_Motor(object):
         GPIO.cleanup()
 
 
-class TwoWheelSteeringThrottle(object):
-
-    def run(self, throttle, steering):
-        if throttle > 1 or throttle < -1:
-            raise ValueError( "throttle must be between 1(forward) and -1(reverse)")
- 
-        if steering > 1 or steering < -1:
-            raise ValueError( "steering must be between 1(right) and -1(left)")
-
-        left_motor_speed = throttle
-        right_motor_speed = throttle
- 
-        if steering < 0:
-            left_motor_speed *= (1.0 - (-steering))
-        elif steering > 0:
-            right_motor_speed *= (1.0 - steering)
-
-        return left_motor_speed, right_motor_speed
-
-    def shutdown(self):
-        pass
-
-
 class Mini_HBridge_DC_Motor_PWM(object):
     '''
     Motor controlled with an mini hbridge from the gpio pins on Rpi
@@ -575,7 +553,7 @@ class Mini_HBridge_DC_Motor_PWM(object):
     '''
     def __init__(self, pin_forward, pin_backward, freq = 50, max_duty = 90):
         '''
-        max_duy is from 0 to 100. I've read 90 is a good max.
+        max_duty is from 0 to 100. I've read 90 is a good max.
         '''
         import RPi.GPIO as GPIO
         self.pin_forward = pin_forward
